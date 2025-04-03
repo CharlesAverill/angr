@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.2", "wheel", "pyvex==9.2.149"]
+requires = ["setuptools>=61.2", "wheel", "pyvex==9.2.148"]
 build-backend = "setuptools.build_meta"
 
 [project]
