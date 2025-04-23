@@ -47,11 +47,12 @@ class AddressConcretizationMixin(MemoryMixin):
     process of serializing symbolic addresses into concrete ones to be specified.
     """
 
-    def __init__(self, read_strategies=None, write_strategies=None, **kwargs):
+    def __init__(self, read_strategies=None, write_strategies=None, unconstrained_use_addr=False, **kwargs):
         super().__init__(**kwargs)
 
         self.read_strategies = read_strategies
         self.write_strategies = write_strategies
+        self.unconstrained_use_addr = unconstrained_use_addr
 
     def set_state(self, state):
         super().set_state(state)
@@ -276,7 +277,8 @@ class AddressConcretizationMixin(MemoryMixin):
             concrete_addrs = self._interleave_ints(sorted(self.concretize_read_addr(addr, condition=condition)))
         except SimMemoryError:
             if options.CONSERVATIVE_READ_STRATEGY in self.state.options:
-                return self._default_value(None, size, name="symbolic_read_unconstrained", **kwargs)
+                name = repr(addr) if self.unconstrained_use_addr else "symbolic_read_unconstrained"
+                return self._default_value(None, size, name=name, **kwargs)
             raise
 
         # quick optimization so as to not involve the solver if not necessary
